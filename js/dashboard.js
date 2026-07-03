@@ -1,64 +1,53 @@
-async function carregarAulas() {
+let user
 
-const { data: userData } = await supabase.auth.getUser();
-const user = userData.user;
+async function init() {
+  const { data } = await supabase.auth.getUser()
+  user = data.user
 
-if (!user) {
-location.href = "login.html";
-return;
+  loadLessons()
+  loadProgress()
 }
 
-const { data: aulas } = await supabase.from("aulas").select("*");
+async function loadLessons() {
+  const { data: lessons } = await supabase.from("lessons").select("*")
 
-const { data: progresso } = await supabase
-.from("progresso")
-.select("*")
-.eq("user_id", user.id);
+  const container = document.getElementById("lessons")
+  container.innerHTML = ""
 
-const container = document.getElementById("aulas");
-container.innerHTML = "";
-
-aulas.forEach(aula => {
-
-const feita = progresso?.some(p => p.aula_id === aula.id && p.concluida);
-
-const div = document.createElement("div");
-
-div.className = "card";
-
-div.innerHTML = `
-<h3>${aula.titulo}</h3>
-<p>${aula.descricao}</p>
-<button onclick="concluir(${aula.id})">
-${feita ? "Concluída" : "Concluir aula"}
-</button>
-`;
-
-container.appendChild(div);
-
-});
-
-const total = aulas.length;
-const feitas = progresso?.filter(p => p.concluida).length || 0;
-
-document.getElementById("progresso").style.width =
-((feitas / total) * 100) + "%";
-
+  lessons.forEach(l => {
+    container.innerHTML += `
+      <div>
+        <h3>${l.title}</h3>
+        <p>${l.content}</p>
+        <button onclick="completeLesson(${l.id})">Concluir</button>
+      </div>
+    `
+  })
 }
 
-async function concluir(id) {
+async function completeLesson(lessonId) {
+  await supabase.from("progress").upsert({
+    user_id: user.id,
+    lesson_id: lessonId,
+    completed: true
+  })
 
-const { data: userData } = await supabase.auth.getUser();
-const user = userData.user;
-
-await supabase.from("progresso").upsert({
-user_id: user.id,
-aula_id: id,
-concluida: true
-});
-
-carregarAulas();
-
+  loadProgress()
 }
 
-carregarAulas();
+async function loadProgress() {
+  const { data } = await supabase
+    .from("progress")
+    .select("*")
+    .eq("user_id", user.id)
+
+  const total = data.length
+  const done = data.filter(p => p.completed).length
+
+  const percent = total ? Math.round((done / total) * 100) : 0
+
+  document.getElementById("progress").innerText =
+    `Progresso: ${percent}%`
+}
+
+init()
