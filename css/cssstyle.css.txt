@@ -1,0 +1,36 @@
+body {
+background: #050505;
+color: gold;
+font-family: Arial;
+}
+
+.container {
+max-width: 800px;
+margin: auto;
+padding: 20px;
+}
+
+.card {
+border: 1px solid gold;
+padding: 15px;
+margin: 10px 0;
+}
+
+button {
+background: gold;
+border: none;
+padding: 10px;
+cursor: pointer;
+}
+
+.barra {
+height: 20px;
+background: #222;
+margin-top: 20px;
+}
+
+#progresso {
+height: 100%;
+background: gold;
+width: 0%;
+}

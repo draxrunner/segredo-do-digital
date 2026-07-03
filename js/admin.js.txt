@@ -1,0 +1,17 @@
+async function criar() {
+
+const email = document.getElementById("email").value;
+const senha = document.getElementById("senha").value;
+
+const { data, error } = await supabase.auth.signUp({
+email,
+password: senha
+});
+
+if (error) {
+alert("Erro ao criar aluno");
+return;
+}
+
+alert("Aluno criado com sucesso");
+}
