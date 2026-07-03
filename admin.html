@@ -1,29 +1,18 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>Admin</title>
-<link rel="stylesheet" href="css/style.css">
+<h1>Painel Admin</h1>
+
+<input id="title" placeholder="Título da aula">
+<br><br>
+
+<textarea id="content" placeholder="Conteúdo da aula"></textarea>
+<br><br>
+
+<button onclick="createLesson()">Criar Aula</button>
+
+<hr>
+
+<h2>Aulas existentes</h2>
+<div id="list"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-</head>
-
-<body>
-
-<div class="container">
-
-<h1>Painel João Viana</h1>
-
-<h2>Criar aluno</h2>
-
-<input id="email" placeholder="email">
-<input id="senha" placeholder="senha">
-
-<button onclick="criar()">Criar aluno</button>
-
-</div>
-
 <script src="js/supabase.js"></script>
 <script src="js/admin.js"></script>
-
-</body>
-</html>
